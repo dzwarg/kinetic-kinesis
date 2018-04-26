@@ -42,9 +42,12 @@ provider:
 #            - "/*"
 
 # you can define service wide environment variables here
-  environment:
-    BUCKET: kinetic-kinesis-ingestor
+#  environment:
+#    BUCKET: kinetic-kinesis-ingestor
 
+custom:
+  bucket: kinetic-kinesis-ingestor
+  
 # you can add packaging information here
 #package:
 #  include:
@@ -59,7 +62,7 @@ functions:
     handler: handler.hello
     events:
       - s3:
-        bucket: ${env.BUCKET}
+        bucket: ${self:custom.bucket}
         event: s3:ObjectCreated:*
 
 #    The following are a few example events you can configure
