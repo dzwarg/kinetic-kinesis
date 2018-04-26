@@ -1,3 +1,3 @@
 #!/bin/bash -ex
 
-echo "deploy.sh"
+serverless deploy -v
