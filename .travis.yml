@@ -4,8 +4,12 @@ node_js:
 before_install:
     - echo "before_install"
 install:
-    - echo "install"
+    - npm install
 script:
     - echo "script"
 deploy:
-    - echo "deploy"
+    provider: script
+    script: cicd/deploy.sh
+    on:
+        branch: master
+        
