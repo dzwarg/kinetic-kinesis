@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+    - "lts/*"
+before_install:
+    - echo "before_install"
+install:
+    - echo "install"
+script:
+    - echo "script"
+deploy:
+    - echo "deploy"
