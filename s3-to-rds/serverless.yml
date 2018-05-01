@@ -17,6 +17,11 @@ service: s3-to-rds
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
 
+custom:
+  bucket: kinetic-kinesis-ingestor
+  stream: kinetic-kinesis-delivery
+  role: kinetic-kinesis
+
 provider:
   name: aws
   runtime: nodejs6.10
@@ -41,14 +46,8 @@ provider:
 #            - "Ref" : "ServerlessDeploymentBucket"
 #            - "/*"
 
-# you can define service wide environment variables here
-#  environment:
-#    BUCKET: kinetic-kinesis-ingestor
-
-custom:
-  bucket: kinetic-kinesis-ingestor
-  stream: kinetic-kinesis-delivery
-  role: kinetic-kinesis
+  environment:
+    STREAM: ${self:custom.stream}
   
 # you can add packaging information here
 #package:
@@ -138,7 +137,7 @@ resources:
                 - "aws"
                 - "iam"
                 - ""
-                - !Ref 'AWS::AccountId'
+                - "Fn::Ref": "AWS::AccountId"
                 - "user/${self:custom.role}"
   Outputs:
     NewOutput:
