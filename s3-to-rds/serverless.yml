@@ -180,5 +180,5 @@ resources:
       Value: 
         "Fn::GetAtt":
           - S3BucketInput
-          - BucketName
+          - DomainName
         
