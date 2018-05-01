@@ -154,6 +154,36 @@ resources:
                 StringEquals:
                   "sts:ExternalId": 
                     "Fn::Ref": "AWS::AccountId"
+    KinesisDeliveryPolicy:
+      Type: "AWS::IAM::Policy"
+      Properties:
+        PolicyName: firehose_delivery_policy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+            - Effect: Allow
+              Action:
+                - "s3:AbortMultipartUpload"
+                - "s3:GetBucketLocation"
+                - "s3:GetObject"
+                - "s3:ListBucket"
+                - "s3:ListBucketMultipartUploads"
+                - "s3:PutObject"
+              Resource:
+                - "Fn::Join"
+                  - ""
+                  - - "arn:aws:s3:::"
+                    - "Fn::Ref":
+                      S3BucketInput
+                - "Fn::Join"
+                  - ""
+                  - - "arn:aws:s3:::"
+                    - "Fn::Ref":
+                      S3BucketInput
+                    - "*"
+        Roles:
+          - "Fn::Ref":
+            KinesisDeliveryRole
   Outputs:
     NewOutput:
       Description: "S3 Input Bucket"
