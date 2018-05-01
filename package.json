@@ -18,5 +18,9 @@
   "homepage": "https://github.com/dzwarg/kinetic-kinesis#readme",
   "devDependencies": {
     "serverless": "^1.26.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.230.1",
+    "pg": "^7.4.1"
   }
 }
