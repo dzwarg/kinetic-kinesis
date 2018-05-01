@@ -230,9 +230,17 @@ resources:
     DatabaseSubnet:
       Type: AWS::EC2::Subnet
       Properties:
-        CidrBlock: "10.0.0.0/24"
+        CidrBlock: 
+          "Fn::GetAtt":
+            - DatabaseVPC
+            - CidrBlock
         VpcId:
-          "Ref": "VPCID"
+          "Ref": "DatabaseVPC"
+          
+    DatabaseVPC:
+      Type: AWS::EC2::VPC
+      Properties:
+        CidrBlock: "10.0.0.0/24"
 
   Outputs:
     InputBucketName:
