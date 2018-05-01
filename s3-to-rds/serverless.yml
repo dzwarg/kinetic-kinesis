@@ -18,7 +18,8 @@ service: s3-to-rds
 # frameworkVersion: "=X.X.X"
 
 custom:
-  bucket: kinetic-kinesis-ingestor
+  inputbucket: kinetic-kinesis-ingestor
+  streambucket: kinetic-kinesis-streams
   stream: kinetic-kinesis-delivery
   role: kinetic-kinesis
 
@@ -62,17 +63,11 @@ functions:
   s3tokinesis:
     handler: s3_to_kinesis.handler
     events:
-      - s3: 
-        bucket: input
-        rules:
-            - prefix: uploads/
+      - s3: input
   s3tords:
     handler: s3_to_rds.handler
     events:
-      - s3: 
-        bucket: input
-        rules:
-          - prefix: streams/
+      - s3: streams
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -113,7 +108,7 @@ resources:
     S3BucketInput:
       Type: AWS::S3::Bucket
       Properties:
-        BucketName: ${self:custom.bucket}
+        BucketName: ${self:custom.inputbucket}
     S3tokinesisLambdaPermissionInputS3:
       Type: "AWS::Lambda::Permission"
       Properties:
@@ -125,7 +120,11 @@ resources:
         Action: "lambda:InvokeFunction"
         SourceAccount:
           Ref: AWS::AccountId
-        SourceArn: "arn:aws:s3:::${self:custom.bucket}"
+        SourceArn: "arn:aws:s3:::${self:custom.inputbucket}"
+    S3BucketStreams:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: ${self:custom.streambucket}
     S3tordsLambdaPermissionInputS3:
       Type: "AWS::Lambda::Permission"
       Properties:
@@ -137,7 +136,7 @@ resources:
         Action: "lambda:InvokeFunction"
         SourceAccount:
           Ref: AWS::AccountId
-        SourceArn: "arn:aws:s3:::${self:custom.bucket}"
+        SourceArn: "arn:aws:s3:::${self:custom.streambucket}"
     KinesisDeliveryStream:
       Type: AWS::KinesisFirehose::DeliveryStream
       Properties:
