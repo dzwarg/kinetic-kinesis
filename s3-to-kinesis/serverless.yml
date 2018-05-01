@@ -129,14 +129,22 @@ resources:
               - Arn
           BufferingHints:
             SizeInMBs: 1
-          CompressionFormat: "GZIP"
-          Prefix: "streams"
-          RoleARN: "arn:aws:iam::${env:AWS_ACCOUNT}:user/${self:custom.role}"
+          CompressionFormat: "UNCOMPRESSED"
+          Prefix: "streams/"
+          RoleARN: 
+            "Fn::Join":
+              - ":"
+              - - "arn"
+                - "aws"
+                - "iam"
+                - ""
+                - !Ref 'AWS::AccountId'
+                - "user/${self:custom.role}"
   Outputs:
     NewOutput:
       Description: "S3 Input Bucket"
-        Value: 
-          "Fn::GetAtt":
-            - S3BucketInput
-            - BucketName
+      Value: 
+        "Fn::GetAtt":
+          - S3BucketInput
+          - BucketName
         
