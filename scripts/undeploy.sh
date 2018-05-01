@@ -2,4 +2,4 @@
 
 cd s3-to-rds
 
-serverless remove -v
+serverless remove -v || true
