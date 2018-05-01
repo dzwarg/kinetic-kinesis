@@ -11,7 +11,7 @@
 #
 # Happy Coding!
 
-service: s3-to-kinesis
+service: s3-to-rds
 
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
@@ -60,8 +60,8 @@ custom:
 #    - exclude-me-dir/**
 
 functions:
-  hello:
-    handler: handler.hello
+  s3_to_kinesis:
+    handler: s3_to_kinesis.handler
     events:
       - s3: input
 
@@ -105,12 +105,12 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.bucket}
-    HelloLambdaPermissionInputS3:
+    S3_To_KinesisLambdaPermissionInputS3:
       Type: "AWS::Lambda::Permission"
       Properties:
         FunctionName:
           "Fn::GetAtt":
-            - HelloLambdaFunction
+            - S3_To_KinesisLambdaFunction
             - Arn
         Principal: "s3.amazonaws.com"
         Action: "lambda:InvokeFunction"

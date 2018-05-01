@@ -45,7 +45,7 @@ const AWS = require('aws-sdk');
   ]
 }
  */
-module.exports.hello = (event, context, callback) => {
+module.exports.handler = (event, context, callback) => {
   const firehose = new AWS.Firehose();
 
   const params = {
@@ -54,6 +54,9 @@ module.exports.hello = (event, context, callback) => {
       Data: JSON.stringify(event)
     }
   };
+  
+  console.log('Putting record:');
+  console.log(JSON.stringify(params));
 
   return firehose.putRecord(params, (error, data) => {
     if (error) {
