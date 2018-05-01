@@ -229,15 +229,22 @@ resources:
       Properties: 
         DBSubnetGroupDescription: Subnet group for database instances
         SubnetIds:
-          - "Ref": "DatabaseSubnet"
+          - "Ref": "DatabaseSubnetAZ1"
+          - "Ref": "DatabaseSubnetAZ2"
           
-    DatabaseSubnet:
+    DatabaseSubnetAZ1:
       Type: AWS::EC2::Subnet
       Properties:
-        CidrBlock: 
-          "Fn::GetAtt":
-            - DatabaseVPC
-            - CidrBlock
+        AvailabilityZone: "us-east-1"
+        CidrBlock: "10.1.0.0/16"
+        VpcId:
+          "Ref": "DatabaseVPC"
+          
+    DatabaseSubnetAZ2:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: "us-west-1"
+        CidrBlock: "10.2.0.0/16"
         VpcId:
           "Ref": "DatabaseVPC"
           
