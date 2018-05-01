@@ -131,7 +131,7 @@ resources:
           CompressionFormat: "UNCOMPRESSED"
           Prefix: "streams/"
           RoleARN: 
-            "Fn::Ref": "KinesisDeliveryRole"
+            "Ref": "KinesisDeliveryRole"
     KinesisDeliveryRole:
       Type: "AWS::IAM::Role"
       Properties:
@@ -146,7 +146,7 @@ resources:
               Condition:
                 StringEquals:
                   "sts:ExternalId": 
-                    "Fn::Ref": "AWS::AccountId"
+                    "Ref": "AWS::AccountId"
     KinesisDeliveryPolicy:
       Type: "AWS::IAM::Policy"
       Properties:
@@ -166,14 +166,14 @@ resources:
                 - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Fn::Ref": "S3BucketInput"
+                    - "Ref": "S3BucketInput"
                 - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Fn::Ref": "S3BucketInput"
+                    - "Ref": "S3BucketInput"
                     - "*"
         Roles:
-          - "Fn::Ref": "KinesisDeliveryRole"
+          - "Ref": "KinesisDeliveryRole"
   Outputs:
     NewOutput:
       Description: "S3 Input Bucket"
