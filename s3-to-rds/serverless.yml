@@ -194,6 +194,7 @@ resources:
                   - - "arn:aws:s3:::"
                     - "Ref": "S3BucketInput"
                     - "*"
+        DependsOn: "KinesisDeliveryRole"
         Roles:
           - "Ref": "KinesisDeliveryRole"
   Outputs:
