@@ -104,16 +104,7 @@ functions:
 
 # you can add CloudFormation resource templates here
 resources:
-  Mappings:
-    us-east-1:
-      Subnets:
-        - subnet-00000000
-        - subnet-11111111
-        - subnet-22222222
-      SecurityGroups:
-        - sg-00000000
-      InstanceType: db.r4.large
-      BackupRetentionPeriod: 7  Resources:
+  Resources:
     S3BucketInput:
       Type: AWS::S3::Bucket
       Properties:
@@ -179,7 +170,7 @@ resources:
                   "sts:ExternalId": 
                     "Ref": "AWS::AccountId"
         Policies:
-          - PolicyName: "kinesis-delivery-policy"
+          - PolicyName: firehose_delivery_policy
             PolicyDocument:
               Version: "2012-10-17"
               Statement:
@@ -201,31 +192,6 @@ resources:
                       - - "arn:aws:s3:::"
                         - "Ref": "S3BucketInput"
                         - "*"
-
-    DatabaseSubnetGroup:
-      Type: AWS::RDS::DBSubnetGroup
-      Properties:
-        SubnetIds: !FindInMap [!Ref "AWS::AccountId", !Ref "AWS::Region", "Subnets"]
-
-  DatabaseCluster:
-    Type: AWS::RDS::DBCluster
-    Properties:
-      Engine: aurora
-      MasterUsername: !Ref "DatabaseUsername"
-      MasterUserPassword: !Ref "DatabasePassword"
-      BackupRetentionPeriod: !FindInMap [!Ref "AWS::AccountId", !Ref "AWS::Region", "BackupRetentionPeriod"]
-      PreferredBackupWindow: 01:00-02:00
-      PreferredMaintenanceWindow: mon:03:00-mon:04:00
-      DBSubnetGroupName: !Ref "DatabaseSubnetGroup"
-      VpcSecurityGroupIds: !FindInMap [!Ref "AWS::AccountId", !Ref "AWS::Region", "SecurityGroups"]
-
-  DatabasePrimaryInstance:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      Engine: aurora
-      DBClusterIdentifier: !Ref "DatabaseCluster"
-      DBInstanceClass: !FindInMap [!Ref "AWS::AccountId", !Ref "AWS::Region", "InstanceType"]
-      DBSubnetGroupName: !Ref "DatabaseSubnetGroup"
   Outputs:
     NewOutput:
       Description: "S3 Input Bucket"
