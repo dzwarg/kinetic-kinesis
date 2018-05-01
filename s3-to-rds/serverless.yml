@@ -46,13 +46,6 @@ provider:
             - "Ref": "AWS::AccountId"
             - "deliverystream/${self:custom.stream}"
 
-  environment:
-    STREAM: ${self:custom.stream}
-    POSTGRES_USER: ${env:POSTGRES_USER}
-    POSTGRES_PASSWORD: ${env:POSTGRES_PASSWORD}
-    POSTGRES_HOST: ${env:POSTGRES_HOST}
-    POSTGRES_DATABASE: ${env:POSTGRES_DATABASE}
-  
 # you can add packaging information here
 #package:
 #  include:
@@ -67,10 +60,21 @@ functions:
     handler: s3_to_kinesis.handler
     events:
       - s3: input
+    environment:
+      STREAM: ${self:custom.stream}
+
   s3tords:
     handler: s3_to_rds.handler
     events:
       - s3: streams
+    environment:
+      PGUSER: ${env:PGUSER}
+      PGPASSWORD: ${env:PGPASSWORD}
+      PGHOST: ${env:PGHOST}
+      PGDATABASE: ${env:PGDATABASE}
+      PGPORT: 5432
+  
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -204,8 +208,8 @@ resources:
       Type: AWS::RDS::DBCluster
       Properties:
         Engine: aurora-postgresql
-        MasterUsername: ${env:POSTGRES_USER}
-        MasterUserPassword: ${env:POSTGRES_PASSWORD}
+        MasterUsername: ${env:PGUSER}
+        MasterUserPassword: ${env:PGPASSWORD}
         BackupRetentionPeriod: 7
         PreferredBackupWindow: 01:00-02:00
         PreferredMaintenanceWindow: mon:03:00-mon:04:00
