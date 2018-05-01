@@ -47,6 +47,8 @@ provider:
 
 custom:
   bucket: kinetic-kinesis-ingestor
+  stream: kinetic-kinesis-delivery
+  role: kinetic-kinesis
   
 # you can add packaging information here
 #package:
@@ -115,7 +117,26 @@ resources:
         SourceAccount:
           Ref: AWS::AccountId
         SourceArn: "arn:aws:s3:::${self:custom.bucket}"
-#  Outputs:
-#     NewOutput:
-#       Description: "Description for the output"
-#       Value: "Some output value"
+    KinesisDeliveryStream:
+      Type: AWS::KinesisFirehose::DeliveryStream
+      Properties:
+        DeliveryStreamName: ${self:custom.stream}
+        DeliveryStreamType: DirectPut
+        S3DestinationConfiguration:
+          BucketARN: 
+            "Fn::GetAtt":
+              - S3BucketInput
+              - Arn
+          BufferingHints:
+            SizeInMBs: 1
+          CompressionFormat: "GZIP"
+          Prefix: "streams"
+          RoleARN: "arn:aws:iam::${env:AWS_ACCOUNT}:user/${self:custom.role}"
+  Outputs:
+    NewOutput:
+      Description: "S3 Input Bucket"
+        Value: 
+          "Fn::GetAtt":
+            - S3BucketInput
+            - BucketName
+        
