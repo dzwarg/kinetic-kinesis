@@ -131,14 +131,7 @@ resources:
           CompressionFormat: "UNCOMPRESSED"
           Prefix: "streams/"
           RoleARN: 
-            "Fn::Join":
-              - ":"
-              - - "arn"
-                - "aws"
-                - "iam"
-                - ""
-                - "Fn::Ref": "AWS::AccountId"
-                - "user/${self:custom.role}"
+            "Fn::Ref": "KinesisDeliveryRole"
     KinesisDeliveryRole:
       Type: "AWS::IAM::Role"
       Properties:
@@ -170,20 +163,17 @@ resources:
                 - "s3:ListBucketMultipartUploads"
                 - "s3:PutObject"
               Resource:
-                - "Fn::Join"
+                - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Fn::Ref":
-                      S3BucketInput
-                - "Fn::Join"
+                    - "Fn::Ref": "S3BucketInput"
+                - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Fn::Ref":
-                      S3BucketInput
+                    - "Fn::Ref": "S3BucketInput"
                     - "*"
         Roles:
-          - "Fn::Ref":
-            KinesisDeliveryRole
+          - "Fn::Ref": "KinesisDeliveryRole"
   Outputs:
     NewOutput:
       Description: "S3 Input Bucket"
