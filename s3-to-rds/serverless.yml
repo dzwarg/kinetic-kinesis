@@ -148,6 +148,7 @@ resources:
               - S3BucketInput
               - Arn
           BufferingHints:
+            IntervalInSeconds: 60
             SizeInMBs: 1
           CompressionFormat: "UNCOMPRESSED"
           Prefix: "streams/"
