@@ -59,8 +59,8 @@ provider:
 #    - exclude-me-dir/**
 
 functions:
-  s3_to_kinesis:
-    handler: s3_to_kinesis.handler
+  s3tokinesis:
+    handler: s3tokinesis.handler
     events:
       - s3: input
 
@@ -104,12 +104,12 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.bucket}
-    S3_To_KinesisLambdaPermissionInputS3:
+    S3ToKinesisLambdaPermissionInputS3:
       Type: "AWS::Lambda::Permission"
       Properties:
         FunctionName:
           "Fn::GetAtt":
-            - S3_To_KinesisLambdaFunction
+            - S3ToKinesisLambdaFunction
             - Arn
         Principal: "s3.amazonaws.com"
         Action: "lambda:InvokeFunction"
