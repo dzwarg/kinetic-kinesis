@@ -146,7 +146,7 @@ resources:
         S3DestinationConfiguration:
           BucketARN: 
             "Fn::GetAtt":
-              - S3BucketInput
+              - S3BucketStreams
               - Arn
           BufferingHints:
             IntervalInSeconds: 60
