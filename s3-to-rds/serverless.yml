@@ -209,6 +209,8 @@ resources:
         BackupRetentionPeriod: 7
         PreferredBackupWindow: 01:00-02:00
         PreferredMaintenanceWindow: mon:03:00-mon:04:00
+        DBSubnetGroupName:
+          "Ref": "DatabaseSubnet"
 
     DatabaseInstance:
       Type: AWS::RDS::DBInstance
@@ -217,6 +219,20 @@ resources:
         DBInstanceClass: db.r4.large
         DBClusterIdentifier: 
           "Ref": "DatabaseCluster"
+          
+    DatabaseSubnet:
+      Type: AWS::RDS::DBSubnetGroup
+      Properties: 
+        DBSubnetGroupDescription: Subnet group for database instances
+        SubnetIds:
+          - "Ref": "DatabaseSubnet"
+          
+    DatabaseSubnet:
+      Type: AWS::EC2::Subnet
+      Properties:
+        CidrBlock: "10.0.0.0/24"
+        VpcId:
+          "Ref": "VPCID"
 
   Outputs:
     InputBucketName:
