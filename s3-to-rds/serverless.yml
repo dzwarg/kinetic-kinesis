@@ -104,12 +104,12 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.bucket}
-    S3ToKinesisLambdaPermissionInputS3:
+    S3tokinesisLambdaPermissionInputS3:
       Type: "AWS::Lambda::Permission"
       Properties:
         FunctionName:
           "Fn::GetAtt":
-            - S3ToKinesisLambdaFunction
+            - S3tokinesisLambdaFunction
             - Arn
         Principal: "s3.amazonaws.com"
         Action: "lambda:InvokeFunction"
