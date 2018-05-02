@@ -8,12 +8,12 @@ install:
     - cd s3-to-rds && npm install
 before_deploy:
     - cd s3-to-rds && npm install
-    - bash -ex npm run undeploy
+    - bash -ex scripts/undeploy.sh
 script:
     - echo "script"
 deploy:
     provider: script
-    script: bash -ex npm run deploy
+    script: bash -ex scripts/deploy.sh
     on:
         branch: db
         

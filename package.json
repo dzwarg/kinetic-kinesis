@@ -2,10 +2,9 @@
   "name": "kinetic-kinesis",
   "version": "1.0.0",
   "description": "An experiment in AWS, integrating S3, Kinesis, and RDS",
-  "main": "index.js",
   "scripts": {
-    "deploy": "cd s3-to-rds && npm run deploy",
-    "undeploy": "cd s3-to-rds && npm run undeploy"
+    "deploy": "scripts/deploy.sh",
+    "undeploy": "scripts/undeploy.sh"
   },
   "repository": {
     "type": "git",
