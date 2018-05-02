@@ -262,8 +262,10 @@ resources:
           Description: "PostgreSQL Port"
           FromPort: 5432
           ToPort: 5432
-          SourceSecurityGroupId:
-            "Ref": "DatabaseSecurityGroup"
+          CidrIp:
+            "Fn::GetAtt":
+              - DatabaseVPC
+              - CidrBlock
         VpcId:
           "Ref": "DatabaseVPC"
 
