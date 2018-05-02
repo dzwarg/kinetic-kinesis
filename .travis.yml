@@ -4,6 +4,7 @@ node_js:
 cache:
     directories:
         - "node_modules"
+        - "s3-to-rds/node_modules"
 install:
     - pushd s3-to-rds
     - npm install
