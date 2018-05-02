@@ -235,7 +235,7 @@ resources:
     DatabaseSubnetAZ1:
       Type: AWS::EC2::Subnet
       Properties:
-        AvailabilityZone: "us-east-1"
+        AvailabilityZone: "us-east-1a"
         CidrBlock: "10.1.0.0/16"
         VpcId:
           "Ref": "DatabaseVPC"
@@ -243,7 +243,7 @@ resources:
     DatabaseSubnetAZ2:
       Type: AWS::EC2::Subnet
       Properties:
-        AvailabilityZone: "us-west-1"
+        AvailabilityZone: "us-west-1b"
         CidrBlock: "10.2.0.0/16"
         VpcId:
           "Ref": "DatabaseVPC"
