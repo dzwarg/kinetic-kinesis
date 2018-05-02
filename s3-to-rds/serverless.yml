@@ -252,6 +252,20 @@ resources:
       Type: AWS::EC2::VPC
       Properties:
         CidrBlock: "10.0.0.0/23"
+        
+    DatabaseSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: sg-kinetic-kinesis-db
+        GroupDescription: "Connections to the RDS instance"
+        SecurityGroupIngress:
+          Description: "PostgreSQL Port"
+          FromPort: 5432
+          ToPort: 5432
+          SourceSecurityGroupId:
+            "Ref": "DatabaseSecurityGroup"
+        VpcId:
+          "Ref": "DatabaseVPC"
 
     S3tordsLambdaFunction:
       Type: AWS::Lambda::Function
@@ -263,6 +277,14 @@ resources:
               "Fn::GetAtt": 
                 - DatabaseCluster
                 - Endpoint.Address
+        VpcConfig:
+          SecurityGroupIds:
+            - "Fn::GetAtt":
+              - DatabaseSecurityGroup
+              - GroupId
+          SubnetIds:
+            - "Ref": "DatabaseSubnetAZ1"
+            - "Ref": "DatabaseSubnetAZ2"
       
     S3tokinesisLambdaFunction:
       Type: AWS::Lambda::Function
