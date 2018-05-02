@@ -208,6 +208,7 @@ resources:
       Type: AWS::RDS::DBCluster
       Properties:
         Engine: aurora-postgresql
+        DatabaseName: ${env:PGDATABASE}
         MasterUsername: ${env:PGUSER}
         MasterUserPassword: ${env:PGPASSWORD}
         BackupRetentionPeriod: 7
@@ -256,12 +257,13 @@ resources:
     S3tordsLambdaFunction:
       Type: AWS::Lambda::Function
       DependsOn: DatabaseCluster
-      Environment:
-        Variables:
-          - PGHOST:
-              "Fn::GetAtt": 
-                - DatabaseCluster
-                - Endpoint.Address
+      Properties:
+        Environment:
+          Variables:
+            - PGHOST:
+                "Fn::GetAtt": 
+                  - DatabaseCluster
+                  - Endpoint.Address
       
   Outputs:
     InputBucketName:
