@@ -46,9 +46,6 @@ provider:
             - "Ref": "AWS::AccountId"
             - "deliverystream/${self:custom.stream}"
 
-  environment:
-    STREAM: ${self:custom.stream}
-  
 # you can add packaging information here
 #package:
 #  include:
@@ -63,10 +60,18 @@ functions:
     handler: s3_to_kinesis.handler
     events:
       - s3: input
+
   s3tords:
     handler: s3_to_rds.handler
     events:
       - s3: streams
+    environment:
+      PGUSER: ${env:PGUSER}
+      PGPASSWORD: ${env:PGPASSWORD}
+      PGDATABASE: ${env:PGDATABASE}
+      PGPORT: 5432
+  
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -98,8 +103,7 @@ functions:
 #          trigger: PreSignUp
 
 #    Define function environment variables here
-#    environment:
-#      variable2: value2
+#   environment:
 
 # you can add CloudFormation resource templates here
 resources:
@@ -124,7 +128,7 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.streambucket}
-    S3tordsLambdaPermissionInputS3:
+    S3tordsLambdaPermissionStreamsS3:
       Type: "AWS::Lambda::Permission"
       Properties:
         FunctionName:
@@ -189,19 +193,89 @@ resources:
                 - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Ref": "S3BucketInput"
+                    - "Ref": "S3BucketStreams"
                 - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Ref": "S3BucketInput"
+                    - "Ref": "S3BucketStreams"
                     - "*"
         Roles:
           - "Ref": "KinesisDeliveryRole"
+
+    DatabaseCluster:
+      Type: AWS::RDS::DBCluster
+      Properties:
+        Engine: aurora-postgresql
+        DatabaseName: ${env:PGDATABASE}
+        MasterUsername: ${env:PGUSER}
+        MasterUserPassword: ${env:PGPASSWORD}
+        BackupRetentionPeriod: 7
+        PreferredBackupWindow: 01:00-02:00
+        PreferredMaintenanceWindow: mon:03:00-mon:04:00
+        DBSubnetGroupName:
+          "Ref": "DatabaseSubnetGroup"
+        DBClusterParameterGroupName: default.aurora-postgresql9.6
+
+    DatabaseInstance:
+      Type: AWS::RDS::DBInstance
+      Properties:
+        Engine: aurora-postgresql
+        DBInstanceClass: db.r4.large
+        DBClusterIdentifier: 
+          "Ref": "DatabaseCluster"
+          
+    DatabaseSubnetGroup:
+      Type: AWS::RDS::DBSubnetGroup
+      Properties: 
+        DBSubnetGroupDescription: Subnet group for database instances
+        SubnetIds:
+          - "Ref": "DatabaseSubnetAZ1"
+          - "Ref": "DatabaseSubnetAZ2"
+          
+    DatabaseSubnetAZ1:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: "us-east-1a"
+        CidrBlock: "10.0.0.0/24"
+        VpcId:
+          "Ref": "DatabaseVPC"
+          
+    DatabaseSubnetAZ2:
+      Type: AWS::EC2::Subnet
+      Properties:
+        AvailabilityZone: "us-east-1b"
+        CidrBlock: "10.0.1.0/24"
+        VpcId:
+          "Ref": "DatabaseVPC"
+          
+    DatabaseVPC:
+      Type: AWS::EC2::VPC
+      Properties:
+        CidrBlock: "10.0.0.0/23"
+
+    S3tordsLambdaFunction:
+      Type: AWS::Lambda::Function
+      DependsOn: DatabaseCluster
+      Properties:
+        Environment:
+          Variables:
+            PGHOST:
+              "Fn::GetAtt": 
+                - DatabaseCluster
+                - Endpoint.Address
+      
+    S3tokinesisLambdaFunction:
+      Type: AWS::Lambda::Function
+      DependsOn: KinesisDeliveryStream
+      Properties:
+        Environment:
+          Variables:
+            STREAM:
+              "Ref": "KinesisDeliveryStream"
   Outputs:
-    NewOutput:
+    InputBucketName:
       Description: "S3 Input Bucket"
       Value: 
         "Fn::GetAtt":
           - S3BucketInput
           - DomainName
-        
