@@ -9,14 +9,13 @@ install:
     - pushd s3-to-rds
     - npm install
     - popd
-before_deploy:
-    - pushd s3-to-rds
     - npm install
-    - popd
+before_deploy:
     - bash -ex scripts/undeploy.sh
 script:
     - echo "script"
 deploy:
+    skip_cleanup: true
     provider: script
     script: bash -ex scripts/deploy.sh
     on:
