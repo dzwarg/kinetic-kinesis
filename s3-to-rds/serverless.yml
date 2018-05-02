@@ -25,7 +25,7 @@ custom:
 
 provider:
   name: aws
-  runtime: nodejs6.10
+  runtime: nodejs8.10
 
 # you can overwrite defaults here
 #  stage: dev
@@ -45,6 +45,12 @@ provider:
             - "Ref": "AWS::Region"
             - "Ref": "AWS::AccountId"
             - "deliverystream/${self:custom.stream}"
+    - Effect: "Allow"
+      Action:
+        - "ec2:CreateNetworkInterface"
+        - "ec2:DescribeNetworkInterfaces"
+        - "ec2:DeleteNetworkInterface"
+      Resource: "*"
 
 # you can add packaging information here
 #package:
@@ -252,6 +258,23 @@ resources:
       Type: AWS::EC2::VPC
       Properties:
         CidrBlock: "10.0.0.0/23"
+        
+    DatabaseSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        GroupName: kinetic-kinesis-db
+        GroupDescription: "Connections to the RDS instance"
+        SecurityGroupIngress:
+          Description: "PostgreSQL Port"
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp:
+            "Fn::GetAtt":
+              - DatabaseVPC
+              - CidrBlock
+          IpProtocol: "tcp"
+        VpcId:
+          "Ref": "DatabaseVPC"
 
     S3tordsLambdaFunction:
       Type: AWS::Lambda::Function
@@ -263,6 +286,14 @@ resources:
               "Fn::GetAtt": 
                 - DatabaseCluster
                 - Endpoint.Address
+        VpcConfig:
+          SecurityGroupIds:
+            - "Fn::GetAtt":
+              - DatabaseSecurityGroup
+              - GroupId
+          SubnetIds:
+            - "Ref": "DatabaseSubnetAZ1"
+            - "Ref": "DatabaseSubnetAZ2"
       
     S3tokinesisLambdaFunction:
       Type: AWS::Lambda::Function
