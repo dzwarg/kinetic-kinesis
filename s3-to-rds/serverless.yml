@@ -153,10 +153,6 @@ resources:
           BufferingHints:
             IntervalInSeconds: 60
             SizeInMBs: 1
-          CloudWatchLoggingOptions:
-            Enabled: true
-            LogGroupName: "/aws/lambda/${self:service}-${self:opt.stage}-s3tokinesis"
-            LogStreamName: "kinesis-delivery-logstream"
           CompressionFormat: "UNCOMPRESSED"
           Prefix: "streams/"
           RoleARN: 
@@ -197,11 +193,11 @@ resources:
                 - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Ref": "S3BucketInput"
+                    - "Ref": "S3BucketStreams"
                 - "Fn::Join":
                   - ""
                   - - "arn:aws:s3:::"
-                    - "Ref": "S3BucketInput"
+                    - "Ref": "S3BucketStreams"
                     - "*"
         Roles:
           - "Ref": "KinesisDeliveryRole"
