@@ -4,14 +4,20 @@ node_js:
 cache:
     directories:
         - "node_modules"
+        - "s3-to-rds/node_modules"
+install:
+    - pushd s3-to-rds
+    - npm install
+    - popd
+    - npm install
 before_deploy:
-    - npm install -g serverless
     - bash -ex scripts/undeploy.sh
 script:
     - echo "script"
 deploy:
+    skip_cleanup: true
     provider: script
     script: bash -ex scripts/deploy.sh
     on:
-        branch: master
+        branch: db
         

@@ -2,9 +2,9 @@
   "name": "kinetic-kinesis",
   "version": "1.0.0",
   "description": "An experiment in AWS, integrating S3, Kinesis, and RDS",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "deploy": "scripts/deploy.sh",
+    "undeploy": "scripts/undeploy.sh"
   },
   "repository": {
     "type": "git",
@@ -15,8 +15,5 @@
   "bugs": {
     "url": "https://github.com/dzwarg/kinetic-kinesis/issues"
   },
-  "homepage": "https://github.com/dzwarg/kinetic-kinesis#readme",
-  "devDependencies": {
-    "serverless": "^1.26.1"
-  }
+  "homepage": "https://github.com/dzwarg/kinetic-kinesis#readme"
 }

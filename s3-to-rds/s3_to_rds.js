@@ -1,7 +1,26 @@
 'use strict';
 
 const AWS = require('aws-sdk');
+const {Client} = require('pg')
 
 module.exports.handler = (event, context, callback) => {
-    callback({'message':'Not implemented'});
+    const client = new Client();
+    
+    client.connect((err) => {
+        if (err) {
+            console.log(err);
+            callback(err);
+            return;
+        }
+        
+        client.query('SELECT NOW()', (err, res) => {
+            if (err) {
+                console.log(err);
+                callback(err);
+            }
+            
+            console.log(null, res);
+            client.end();
+        });
+    });
 };

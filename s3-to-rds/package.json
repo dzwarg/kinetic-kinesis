@@ -1,0 +1,18 @@
+{
+  "name": "s3-to-rds",
+  "version": "1.0.0",
+  "description": "An suite of lambda functions to support a data pipeline.",
+  "scripts": {
+    "deploy": "serverless deploy -v",
+    "undeploy": "serverless remove -v"
+  },
+  "author": "David Zwarg",
+  "license": "Unlicense",
+  "devDependencies": {
+    "serverless": "^1.26.1"
+  },
+  "dependencies": {
+    "aws-sdk": "^2.230.1",
+    "pg": "^7.4.1"
+  }
+}
