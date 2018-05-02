@@ -10,10 +10,8 @@ install:
     - npm install
     - popd
     - npm install
-before_deploy:
-    - bash -ex scripts/undeploy.sh
-script:
-    - echo "script"
+# before_deploy:
+#     - bash -ex scripts/undeploy.sh
 deploy:
     skip_cleanup: true
     provider: script
