@@ -60,8 +60,6 @@ functions:
     handler: s3_to_kinesis.handler
     events:
       - s3: input
-    environment:
-      STREAM: ${self:custom.stream}
 
   s3tords:
     handler: s3_to_rds.handler
@@ -261,11 +259,21 @@ resources:
       Properties:
         Environment:
           Variables:
-            - PGHOST:
-                "Fn::GetAtt": 
-                  - DatabaseCluster
-                  - Endpoint.Address
+            PGHOST:
+              "Fn::GetAtt": 
+                - DatabaseCluster
+                - Endpoint.Address
       
+    S3tokinesisLambdaFunction:
+      Type: AWS::Lambda::Function
+      DependsOn: KinesisDeliveryStream
+      Properties:
+        Environment:
+          Variables:
+            STREAM:
+              "Fn::GetAtt":
+                - KinesisDeliveryStream
+                - "Ref": "KinesisDeliveryStream"
   Outputs:
     InputBucketName:
       Description: "S3 Input Bucket"
