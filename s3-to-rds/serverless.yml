@@ -128,7 +128,7 @@ resources:
       Type: AWS::S3::Bucket
       Properties:
         BucketName: ${self:custom.streambucket}
-    S3tordsLambdaPermissionInputS3:
+    S3tordsLambdaPermissionStreamsS3:
       Type: "AWS::Lambda::Permission"
       Properties:
         FunctionName:
