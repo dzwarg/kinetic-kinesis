@@ -266,6 +266,7 @@ resources:
             "Fn::GetAtt":
               - DatabaseVPC
               - CidrBlock
+          IpProtocol: "tcp"
         VpcId:
           "Ref": "DatabaseVPC"
 
