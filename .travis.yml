@@ -19,5 +19,5 @@ deploy:
     provider: script
     script: bash -ex scripts/deploy.sh
     on:
-        branch: db
+        branch: master
         
