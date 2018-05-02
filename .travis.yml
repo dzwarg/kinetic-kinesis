@@ -16,3 +16,5 @@ deploy:
     skip_cleanup: true
     provider: script
     script: bash -ex scripts/deploy.sh
+    on:
+        all_branches: true
