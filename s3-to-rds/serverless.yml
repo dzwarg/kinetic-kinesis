@@ -70,7 +70,6 @@ functions:
     environment:
       PGUSER: ${env:PGUSER}
       PGPASSWORD: ${env:PGPASSWORD}
-      PGHOST: ${env:PGHOST}
       PGDATABASE: ${env:PGDATABASE}
       PGPORT: 5432
   
@@ -204,6 +203,7 @@ resources:
                     - "*"
         Roles:
           - "Ref": "KinesisDeliveryRole"
+
     DatabaseCluster:
       Type: AWS::RDS::DBCluster
       Properties:
@@ -243,7 +243,7 @@ resources:
     DatabaseSubnetAZ2:
       Type: AWS::EC2::Subnet
       Properties:
-        AvailabilityZone: "us-west-1b"
+        AvailabilityZone: "us-east-1b"
         CidrBlock: "10.2.0.0/16"
         VpcId:
           "Ref": "DatabaseVPC"
@@ -253,6 +253,16 @@ resources:
       Properties:
         CidrBlock: "10.0.0.0/24"
 
+    S3tordsLambdaFunction:
+      Type: AWS::Lambda::Function
+      DependsOn: DatabaseCluster
+      Environment:
+        Variables:
+          - PGHOST:
+              "Fn::GetAtt": 
+                - DatabaseCluster
+                - Endpoint.Address
+      
   Outputs:
     InputBucketName:
       Description: "S3 Input Bucket"
