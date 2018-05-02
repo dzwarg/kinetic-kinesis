@@ -237,7 +237,7 @@ resources:
       Type: AWS::EC2::Subnet
       Properties:
         AvailabilityZone: "us-east-1a"
-        CidrBlock: "10.1.0.0/16"
+        CidrBlock: "10.0.0.0/24"
         VpcId:
           "Ref": "DatabaseVPC"
           
@@ -245,14 +245,14 @@ resources:
       Type: AWS::EC2::Subnet
       Properties:
         AvailabilityZone: "us-east-1b"
-        CidrBlock: "10.2.0.0/16"
+        CidrBlock: "10.0.1.0/24"
         VpcId:
           "Ref": "DatabaseVPC"
           
     DatabaseVPC:
       Type: AWS::EC2::VPC
       Properties:
-        CidrBlock: "10.0.0.0/24"
+        CidrBlock: "10.0.0.0/23"
 
     S3tordsLambdaFunction:
       Type: AWS::Lambda::Function
