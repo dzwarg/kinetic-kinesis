@@ -271,9 +271,7 @@ resources:
         Environment:
           Variables:
             STREAM:
-              "Fn::GetAtt":
-                - KinesisDeliveryStream
-                - "Ref": "KinesisDeliveryStream"
+              "Ref": "KinesisDeliveryStream"
   Outputs:
     InputBucketName:
       Description: "S3 Input Bucket"
